@@ -350,18 +350,18 @@
 
       function routeChangeHandler(event, nextRoute) {
         if (nextRoute.$$route && nextRoute.$$route.requireToken) {
-                if (!accessToken.get() || expired(accessToken.get())) {
-                  event.preventDefault();
-                  $window.sessionStorage.setItem('oauthRedirectRoute', $location.path());
-                    endpoint.authorize();
-                }
-            }
+          if (!accessToken.get() || expired(accessToken.get())) {
+            event.preventDefault();
+            $window.sessionStorage.setItem('oauthRedirectRoute', $location.path());
+              endpoint.authorize();
+          }
+        }
       };
 
       function init() {
-                if (scope.tokenStorageHandler) {
-                    tokenStorage = scope.tokenStorageHandler
-                }
+        if (scope.tokenStorageHandler) {
+          tokenStorage = scope.tokenStorageHandler
+        }
         scope.buttonClass = scope.buttonClass || 'btn btn-primary';
         scope.signInText = scope.signInText || 'Sign In';
         scope.signOutText = scope.signOutText || 'Sign Out';
