@@ -187,7 +187,7 @@
   }]);
 
   // Endpoint wrapper
-  angular.module('oauth2.endpoint', ['angular-md5']).factory('Endpoint', ['AccessToken', '$window', 'md5', '$rootScope', function(accessToken, $window, md5, $rootScope) {
+  angular.module('oauth2.endpoint', ['angular-md5']).factory('Endpoint', ['AccessToken', '$window', 'md5', '$rootScope, urlBuilder', function(accessToken, $window, md5, $rootScope, urlBuilder) {
     var service = {
       authorize: function() {
         accessToken.destroy();
@@ -260,17 +260,17 @@
       window.setTimeout(setupTokenSilentRenewInTheFuture, renewTokenIn);
     };
 
-    service.signOut = function(token) {
+    service.signOut = function(access_token, id_token) {
       if (service.signOutUrl && service.signOutUrl.length > 0) {
         var url = service.signOutUrl;
+        var params = {'token': access_token}
         if (service.appendSignoutToken) {
-          url = url + '?id_token_hint=' + token;
+          params['id_token_hint'] = id_token;
         }
         if (service.signOutRedirectUrl && service.signOutRedirectUrl.length > 0) {
-          url = url + (service.appendSignoutToken ? '&' : '?');
-          url = url + 'post_logout_redirect_uri=' + encodeURIComponent(service.signOutRedirectUrl);
+          params['post_logout_redirect_uri'] = encodeURIComponent(service.signOutRedirectUrl);
         }
-        window.location.replace(url);
+        window.location.replace(urlBuilder(url, params));
       }
     };
 
@@ -300,6 +300,20 @@
 
     return service;
   }]);
+
+  angular.module('oauth2.endpoint').factory('urlBuilder', function($httpParamSerializer) {
+
+    function buildUrl(url, params) {
+      var serializedParams = $httpParamSerializer(params);
+
+      if (serializedParams.length > 0) {
+        url += ((url.indexOf('?') === -1) ? '?' : '&') + serializedParams;
+      }
+      return url;
+    }
+
+    return buildUrl;
+  });
 
   // Open ID directive
   angular.module('oauth2.directive', [])
@@ -424,9 +438,9 @@
       }
 
       scope.signOut = function() {
-        var token = accessToken.get().id_token;
-        accessToken.destroy();
-        endpoint.signOut(token);
+        var access_token = accessToken.get().access_token;
+        var id_token = accessToken.get().id_token;
+        endpoint.signOut(access_token, id_token);
       };
     };
 
