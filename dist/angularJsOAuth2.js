@@ -440,6 +440,7 @@
       scope.signOut = function() {
         var access_token = accessToken.get().access_token;
         var id_token = accessToken.get().id_token;
+        accessToken.destroy();
         endpoint.signOut(access_token, id_token);
       };
     };
