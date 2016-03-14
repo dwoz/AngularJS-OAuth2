@@ -1,7 +1,7 @@
 var grunt = require('grunt');
 module.exports = function ( karma ) {
   karma.set({
-    
+
     basePath: '.',
 
     files: [
@@ -12,7 +12,7 @@ module.exports = function ( karma ) {
     ],
 
     frameworks: [ 'jasmine' ],
-    
+
     logLevel: karma.LOG_INFO,
 
     reporters: ['progress'],
