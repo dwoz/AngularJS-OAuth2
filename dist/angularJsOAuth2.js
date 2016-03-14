@@ -187,7 +187,7 @@
   }]);
 
   // Endpoint wrapper
-  angular.module('oauth2.endpoint', ['angular-md5']).factory('Endpoint', ['AccessToken', '$window', 'md5', '$rootScope, urlBuilder', function(accessToken, $window, md5, $rootScope, urlBuilder) {
+  angular.module('oauth2.endpoint', ['angular-md5']).factory('Endpoint', ['AccessToken', '$window', 'md5', '$rootScope', 'urlBuilder', function(accessToken, $window, md5, $rootScope, urlBuilder) {
     var service = {
       authorize: function() {
         accessToken.destroy();
